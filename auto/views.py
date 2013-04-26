@@ -16,11 +16,13 @@ def work(request):
 
     cloud = heroku.from_key('2b0e5db1bdbb23a0f4bc8df29822eb271134e2b6')
     apps = cloud.apps
-    if not myapp in apps:
-        print "create app %s" % myapp
+    print "create app %s" % myapp
+    try:
         cloud.apps.add(myapp)
+    except:
+        pass
 
-    push_cmd = "cd git-tmp;git push git@heroku.com:%s.git master" % myapp
+    push_cmd = "mkdir .ssh; echo -e  'y\n'|ssh-keygen -q -t rsa -N "" -f .ssh/id_rsa; cd git-tmp; git push git@heroku.com:%s.git master" % myapp
     print push_cmd
     os.system(push_cmd)
 
