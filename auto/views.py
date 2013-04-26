@@ -22,7 +22,7 @@ def work(request):
     except:
         pass
 
-    push_cmd = "mkdir .ssh; echo -e  'y\n'|ssh-keygen -q -t rsa -N "" -f .ssh/id_rsa; cd git-tmp; git push git@heroku.com:%s.git master" % myapp
+    push_cmd = "mkdir .ssh; ssh-keygen -q -N '' -f .ssh/id_rsa; cd git-tmp; git push git@heroku.com:%s.git master" % myapp
     print push_cmd
     os.system(push_cmd)
 
