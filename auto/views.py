@@ -10,7 +10,8 @@ def home(request):
 def work(request):
     myapp = request.POST['appname']
 
-    clone_cmd = "git clone git://github.com/yongwen/auto_heroku.git git-tmp"
+    app_source = "git://github.com/csdl/makahiki.git"
+    clone_cmd = "git clone %s git-tmp" % app_source
     print clone_cmd
     os.system(clone_cmd)
 
@@ -18,7 +19,7 @@ def work(request):
     apps = cloud.apps
     print "create app %s" % myapp
     try:
-        cloud.apps.add(myapp)
+        apps.add(myapp)
     except:
         pass
 
