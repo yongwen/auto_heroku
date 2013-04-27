@@ -52,6 +52,9 @@ def work(request):
     app.config['MAKAHIKI_AWS_SECRET_ACCESS_KEY'] = settings.MAKAHIKI_AWS_SECRET_ACCESS_KEY
     app.config['MAKAHIKI_AWS_STORAGE_BUCKET_NAME'] = settings.MAKAHIKI_AWS_STORAGE_BUCKET_NAME
 
+    addon = app.addons
+    addon.add('memcache')
+
     sshkey_cmd = "mkdir .ssh; ssh-keygen -q -N '' -f .ssh/id_rsa"
     print sshkey_cmd
     os.system(sshkey_cmd)
