@@ -10,7 +10,7 @@ def home(request):
 def work(request):
     myapp = request.POST['appname']
 
-    app_source = "git@github.com:yongwen/makahiki-min.git"
+    app_source = "git://github.com/yongwen/makahiki-min.git"
     clone_cmd = "git clone %s git-tmp" % app_source
     print clone_cmd
     os.system(clone_cmd)
