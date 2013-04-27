@@ -52,10 +52,10 @@ def work(request):
     app.config['MAKAHIKI_AWS_SECRET_ACCESS_KEY'] = settings.MAKAHIKI_AWS_SECRET_ACCESS_KEY
     app.config['MAKAHIKI_AWS_STORAGE_BUCKET_NAME'] = settings.MAKAHIKI_AWS_STORAGE_BUCKET_NAME
 
-    addon = app.addons
-    addon.add('memcache')
+    heroku_api = 'curl -H "Accept: application/json" -u :%s -X POST https://api.heroku.com/apps/%s/addons/memcache &' %(settings.MAKAHIKI_HEROKU_KEY, myapp)
+    os.system(heroku_api)
 
-    sshkey_cmd = "mkdir .ssh; ssh-keygen -q -N '' -f .ssh/id_rsa"
+    sshkey_cmd = "rm -rf .ssh; mkdir .ssh; ssh-keygen -q -N '' -f .ssh/id_rsa"
     print sshkey_cmd
     os.system(sshkey_cmd)
 
