@@ -1,4 +1,5 @@
 # Create your views here.
+from django.conf import settings
 from django.shortcuts import render_to_response
 import os
 from django.template import RequestContext
@@ -15,13 +16,24 @@ def work(request):
     print clone_cmd
     os.system(clone_cmd)
 
-    cloud = heroku.from_key('2b0e5db1bdbb23a0f4bc8df29822eb271134e2b6')
+    cloud = heroku.from_key(settings.MAKAHIKI_HEROKU_KEY)
     apps = cloud.apps
     print "create app %s" % myapp
     try:
         apps.add(myapp)
     except:
         pass
+
+    app = cloud.apps[myapp]
+
+    app.config['BUILDPACK_URL'] = 'https://github.com/yongwen/makahiki-buildpack.git'
+    app.config['MAKAHIKI_USE_MEMCACHED'] = "True"
+    app.config['MAKAHIKI_USE_HEROKU'] = "True"
+    app.config['MAKAHIKI_USE_S3'] = "True"
+    app.config['MAKAHIKI_ADMIN_INFO'] = settings.MAKAHIKI_ADMIN_INFO
+    app.config['MAKAHIKI_AWS_ACCESS_KEY_ID'] = settings.MAKAHIKI_AWS_ACCESS_KEY_ID
+    app.config['MAKAHIKI_AWS_SECRET_ACCESS_KEY'] = settings.MAKAHIKI_AWS_SECRET_ACCESS_KEY
+    app.config['MAKAHIKI_AWS_STORAGE_BUCKET_NAME'] = settings.MAKAHIKI_AWS_STORAGE_BUCKET_NAME
 
     sshkey_cmd = "mkdir .ssh; ssh-keygen -q -N '' -f .ssh/id_rsa"
     print sshkey_cmd
