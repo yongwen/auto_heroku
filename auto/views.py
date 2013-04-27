@@ -46,7 +46,7 @@ def work(request):
     for line in file:
         cloud.keys.add(line)
 
-    push_cmd = "cd git-tmp; git push git@heroku.com:%s.git master &" % myapp
+    push_cmd = "cd git-tmp; git push git@heroku.com:%s.git master" % myapp
     print push_cmd
     os.system(push_cmd)
 
