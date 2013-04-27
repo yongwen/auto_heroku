@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     # Examples:
     url(r'^$', 'auto.views.home', name='home'),
     url(r'^work', 'auto.views.work', name='work'),
+    url(r'^delete', 'auto.views.delete', name='delete'),
 
     # url(r'^auto_heroku/', include('auto_heroku.foo.urls')),
 

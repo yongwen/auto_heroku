@@ -70,15 +70,45 @@
 
             <!-- Main hero unit for a primary marketing message or call to action -->
             <div class="hero-unit">
-                <h1>Hello, world!</h1>
-                <p>This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
+                <h1>Hello, Heroku!</h1>
 
-                <form class="navbar-form pull-right" action="/work" method="post">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>App name</th>
+                        <th>Status</th>
+                        <th>Slug size</th>
+                        <th>Dynos</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for name, value in apps.items %}
+                    <tr>
+                        <td><a href="http://{{ name}}.herokuapp.com">{{ name }}</a></td>
+                        <td>{{ value.create_status }}</td>
+                        <td>{{ value.slug_size |filesizeformat  }}</td>
+                        <td>{{ value.dynos }}</td>
+                    </tr>
+                    {% endfor %}
+
+                    </tbody>
+                </table>
+
+                <hr>
+                <p>Create a new app ?</p>
+                <form action="/work" method="post">
                     {% csrf_token %}
                     <input name="appname" class="span2" type="text" placeholder="App Name">
-                    <button type="submit" class="btn">Start</button>
+                    <button type="submit" class="btn btn-primary">Create</button>
                 </form>
+                <hr>
+                <p>Delete an app ? </p>
 
+                <form action="/delete" method="post">
+                    {% csrf_token %}
+                    <input name="appname" class="span2" type="text" placeholder="App Name">
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </form>
             </div>
 
             <!-- Example row of columns -->

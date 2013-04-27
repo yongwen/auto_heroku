@@ -1,18 +1,35 @@
 # Create your views here.
 from django.conf import settings
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 import os
 from django.template import RequestContext
 import heroku
 
 def home(request):
-    return render_to_response('index.html', {}, context_instance=RequestContext(request))
+    cloud = heroku.from_key(settings.MAKAHIKI_HEROKU_KEY)
+    apps = cloud.apps
+    app_dict = {}
+    for app in apps:
+        app_dict[app.name] = app.__dict__
+    return render_to_response('index.html',
+                              {'apps': app_dict},
+                              context_instance=RequestContext(request))
+
+def delete(request):
+    myapp = request.POST['appname']
+    cloud = heroku.from_key(settings.MAKAHIKI_HEROKU_KEY)
+    app = cloud.apps[myapp]
+    app.destroy()
+    return  HttpResponseRedirect(reverse("home", args=()))
+
 
 def work(request):
     myapp = request.POST['appname']
 
     app_source = "git://github.com/yongwen/makahiki-min.git"
-    clone_cmd = "git clone %s git-tmp" % app_source
+    clone_cmd = "rm -rf git-tmp; git clone %s git-tmp" % app_source
     print clone_cmd
     os.system(clone_cmd)
 
@@ -46,8 +63,8 @@ def work(request):
     for line in file:
         cloud.keys.add(line)
 
-    push_cmd = "cd git-tmp; git push git@heroku.com:%s.git master" % myapp
+    push_cmd = "cd git-tmp; git push git@heroku.com:%s.git master &" % myapp
     print push_cmd
     os.system(push_cmd)
 
-    return render_to_response('work.html', {}, context_instance=RequestContext(request))
+    return  HttpResponseRedirect(reverse("home", args=()))
