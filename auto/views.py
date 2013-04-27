@@ -10,7 +10,7 @@ def home(request):
 def work(request):
     myapp = request.POST['appname']
 
-    app_source = "git://github.com/csdl/makahiki.git"
+    app_source = "git@github.com:yongwen/makahiki-min.git"
     clone_cmd = "git clone %s git-tmp" % app_source
     print clone_cmd
     os.system(clone_cmd)
@@ -37,5 +37,14 @@ def work(request):
     push_cmd = "cd git-tmp; git push git@heroku.com:%s.git master" % myapp
     print push_cmd
     os.system(push_cmd)
+
+    manage_command = "python makahiki/manage.py"
+    fixture = "default_all.json"
+    os.system("%s syncdb --noinput --migrate --verbosity 0" % manage_command)
+
+    print "setting up default data..."
+    os.system("%s setup_test_data rounds 1" % manage_command)
+    os.system("%s loaddata -v 0 %s" % (manage_command, fixture))
+    os.system("%s setup_test_data all 2" % manage_command)
 
     return render_to_response('work.html', {}, context_instance=RequestContext(request))
