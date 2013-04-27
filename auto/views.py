@@ -38,13 +38,4 @@ def work(request):
     print push_cmd
     os.system(push_cmd)
 
-    manage_command = "python makahiki/manage.py"
-    fixture = "default_all.json"
-    os.system("%s syncdb --noinput --migrate --verbosity 0" % manage_command)
-
-    print "setting up default data..."
-    os.system("%s setup_test_data rounds 1" % manage_command)
-    os.system("%s loaddata -v 0 %s" % (manage_command, fixture))
-    os.system("%s setup_test_data all 2" % manage_command)
-
     return render_to_response('work.html', {}, context_instance=RequestContext(request))
