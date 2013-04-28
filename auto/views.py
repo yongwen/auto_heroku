@@ -104,7 +104,7 @@ def work(request):
     #print "git push"
     #os.system(push_cmd)
 
-    push_cmd = 'cd git-tmp; git push git@heroku.com:%s.git master; curl -s -o /dev/null http://%s.herokuapp.com/init/' % (appname, appname)
+    push_cmd = 'cd git-tmp; git push git@heroku.com:%s.git master; curl -s -o /dev/null http://%s.herokuapp.com/init/; echo push completed' % (appname, appname)
 
     cmd = 'echo "%s" > /tmp/push.sh' % (clone_cmd + push_cmd)
     os.system(cmd)
