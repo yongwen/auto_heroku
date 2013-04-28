@@ -98,7 +98,7 @@
 
                 <hr>
                 <p>Create a new app ?</p>
-                <form action="/work" method="post">
+                <form action="/work/" method="post">
                     {% csrf_token %}
                     <input name="appname" class="span2" type="text" placeholder="App Name">
                     <button type="submit" class="btn btn-primary">Create</button>
@@ -106,7 +106,7 @@
                 <hr>
                 <p>Delete an app ? </p>
 
-                <form action="/delete" method="post">
+                <form action="/delete/" method="post">
                     {% csrf_token %}
                     <input name="appname" class="span2" type="text" placeholder="App Name">
                     <button type="submit" class="btn btn-primary">Delete</button>
