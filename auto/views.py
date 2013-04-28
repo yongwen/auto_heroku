@@ -78,15 +78,17 @@ def work(request):
     except:
         pass
 
-    sshkey_cmd = "rm -rf /tmp/.ssh; mkdir /tmp/.ssh; ssh-keygen -q -N '' -f /tmp/.ssh/id_rsa"
+    sshkey_cmd = "rm -rf .ssh; mkdir .ssh; ssh-keygen -q -N '' -f .ssh/id_rsa"
     os.system(sshkey_cmd)
 
-    knownhosts_cmd = 'echo "|1|v2fAE9r+64rPyeKTVWZamQa95N8=|8cihuAGn19m0ljoDHJITbpNx618= ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAu8erSx6jh+8ztsfHwkNeFr/SZaSOcvoa8AyMpaerGIPZDB2TKNgNkMSYTLYGDK2ivsqXopo2W7dpQRBIVF80q9mNXy5tbt1WE04gbOBB26Wn2hF4bk3Tu+BNMFbvMjPbkVlC2hcFuQJdH4T2i/dtauyTpJbD/6ExHR9XYVhdhdMs0JsjP/Q5FNoWh2ff9YbZVpDQSTPvusUp4liLjPfa/i0t+2LpNCeWy8Y+V9gUlDWiyYwrfMVI0UwNCZZKHs1Unpc11/4HLitQRtvuk0Ot5qwwBxbmtvCDKZvj1aFBid71/mYdGRPYZMIxq1zgP1acePC1zfTG/lvuQ7d0Pe0kaw==" > /tmp/.ssh/known_hosts'
+    knownhosts_cmd = 'echo "|1|v2fAE9r+64rPyeKTVWZamQa95N8=|8cihuAGn19m0ljoDHJITbpNx618= ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAu8erSx6jh+8ztsfHwkNeFr/SZaSOcvoa8AyMpaerGIPZDB2TKNgNkMSYTLYGDK2ivsqXopo2W7dpQRBIVF80q9mNXy5tbt1WE04gbOBB26Wn2hF4bk3Tu+BNMFbvMjPbkVlC2hcFuQJdH4T2i/dtauyTpJbD/6ExHR9XYVhdhdMs0JsjP/Q5FNoWh2ff9YbZVpDQSTPvusUp4liLjPfa/i0t+2LpNCeWy8Y+V9gUlDWiyYwrfMVI0UwNCZZKHs1Unpc11/4HLitQRtvuk0Ot5qwwBxbmtvCDKZvj1aFBid71/mYdGRPYZMIxq1zgP1acePC1zfTG/lvuQ7d0Pe0kaw==" > .ssh/known_hosts'
     os.system(knownhosts_cmd)
 
-    file = open("/tmp/.ssh/id_rsa.pub")
+    file = open(".ssh/id_rsa.pub")
     for line in file:
         cloud.keys.add(line)
+
+    print "setup ssh key"
 
     app_source = "git://github.com/yongwen/makahiki-min.git"
     clone_cmd = "cd /tmp; rm -rf git-tmp; git clone %s git-tmp; " % app_source
@@ -95,6 +97,11 @@ def work(request):
 
     cmd = 'echo "%s" > /tmp/push.sh' % (clone_cmd + push_cmd)
     os.system(cmd)
+
+    print "git clone and push"
     os.system("/bin/bash /tmp/push.sh &")
+
+    print "clean up"
+    os.system("rm -rf .ssh")
 
     return HttpResponseRedirect(reverse("home", args=()))
