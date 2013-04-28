@@ -18,8 +18,14 @@ def home(request):
     app_dict = {}
     for app in apps:
         app_dict[app.name] = app.__dict__
+
+    keys = sorted(app_dict.keys())
+    app_list = []
+    for key in keys:
+        app_list.append((key, app_dict[key]))
+
     return render_to_response('index.html',
-                              {'apps': app_dict},
+                              {'apps': app_list},
                               context_instance=RequestContext(request))
 
 def delete(request):
