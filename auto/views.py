@@ -96,17 +96,17 @@ def work(request):
     print "git clone"
     os.system(clone_cmd)
 
-    push_cmd = 'cd /tmp/git-tmp; git push git@heroku.com:%s.git master; curl -s -o /dev/null http://%s.herokuapp.com/init/' % (appname, appname)
+    push_cmd = 'cd /tmp/git-tmp; git push git@heroku.com:%s.git master &' % (appname)
+    print "git push"
+    os.system(push_cmd)
 
-    cmd = 'echo "%s" > /tmp/push.sh' % (push_cmd)
-    os.system(cmd)
+    #push_cmd = 'cd /tmp/git-tmp; git push git@heroku.com:%s.git master; curl -s -o /dev/null http://%s.herokuapp.com/init/' % (appname, appname)
 
-    #push_cmd = 'cd /tmp/git-tmp; git push git@heroku.com:%s.git master &' % (appname)
-    #print "git push"
-    #os.system(push_cmd)
+    #cmd = 'echo "%s" > /tmp/push.sh' % (push_cmd)
+    #os.system(cmd)
 
-    print "git clone and push"
-    os.system("/bin/bash /tmp/push.sh &")
+    #print "git clone and push"
+    #os.system("/bin/bash /tmp/push.sh &")
 
 
     return HttpResponseRedirect(reverse("home", args=()))
