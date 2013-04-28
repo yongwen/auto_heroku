@@ -92,7 +92,7 @@ def work(request):
     print "setup ssh key"
 
     app_source = "git://github.com/yongwen/makahiki-min.git"
-    clone_cmd = "cd /tmp; rm -rf git-tmp; git clone %s git-tmp; " % app_source
+    clone_cmd = "git clone %s git-tmp; " % app_source
     print "git clone"
     os.system(clone_cmd)
 
