@@ -1,7 +1,7 @@
 # Create your views here.
 import json
-import urllib
-import urllib2
+from django.utils import timezone
+import datetime
 from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
@@ -11,14 +11,28 @@ from django.template import RequestContext
 import heroku
 import requests
 
+COMPLETED_TEXT = "Makahiki instance created successfully!"
 
 def home(request):
     cloud = heroku.from_key(settings.MAKAHIKI_HEROKU_KEY)
     apps = cloud.apps
     app_dict = {}
     for app in apps:
-        app_dict[app.name] = app.__dict__
+        app_info = app.__dict__
 
+        today = timezone.now() - datetime.timedelta(minutes=3)
+        complete_status = "complete"
+        if app_info["slug_size"] is None or app_info["slug_size"] == 0:
+            complete_status = "pending"
+        elif app_info["created_at"] >= today:
+            # if newly created, ping the app url to see if it is up
+            r = requests.get('https://%s.herokuapp.com' % app.name)
+            print "%s response code=%d" % (app.name, r.status_code)
+            if 200 != r.status_code:
+                complete_status = "pending"
+
+        app_info["completed_status"] = complete_status
+        app_dict[app.name] = app_info
     keys = sorted(app_dict.keys())
     app_list = []
     for key in keys:
@@ -104,7 +118,7 @@ def work(request):
     #print "git push"
     #os.system(push_cmd)
 
-    push_cmd = 'cd git-tmp; git push git@heroku.com:%s.git master; curl -s -o /dev/null http://%s.herokuapp.com/init/; echo push completed' % (appname, appname)
+    push_cmd = 'cd git-tmp; git push git@heroku.com:%s.git master; curl -s -o /dev/null http://%s.herokuapp.com/init/; echo %s' % (appname, appname, COMPLETED_TEXT)
 
     cmd = 'echo "%s" > /tmp/push.sh' % (clone_cmd + push_cmd)
     os.system(cmd)

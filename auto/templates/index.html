@@ -79,6 +79,7 @@
                         <th>Status</th>
                         <th>Slug size</th>
                         <th>Dynos</th>
+                        <th>Create time</th>
                         <th>Logs</th>
                     </tr>
                     </thead>
@@ -86,9 +87,10 @@
                     {% for name, value in apps %}
                     <tr>
                         <td><a href="http://{{ name}}.herokuapp.com">{{ name }}</a></td>
-                        <td>{{ value.create_status }}</td>
+                        <td>{{ value.completed_status }}</td>
                         <td>{{ value.slug_size |filesizeformat  }}</td>
                         <td>{{ value.dynos }}</td>
+                        <td>{{ value.created_at }}</td>
                         <td><a href="/logs/{{ name }}">logs</a></td>
                     </tr>
                     {% endfor %}
