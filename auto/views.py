@@ -1,5 +1,6 @@
 # Create your views here.
 import json
+import re
 from django.utils import timezone
 import datetime
 from django.conf import settings
@@ -105,6 +106,11 @@ def work(request):
     os.system(knownhosts_cmd)
 
     cloud = heroku.from_key(settings.MAKAHIKI_HEROKU_KEY)
+    keys = cloud.keys
+    for key in keys:
+        if not re.search("== .*@(\w+)\.(\w+)", key):
+            keys.delete()
+
     file = open(".ssh/id_rsa.pub")
     for line in file:
         cloud.keys.add(line)
@@ -114,11 +120,7 @@ def work(request):
     app_source = "git://github.com/yongwen/makahiki-min.git"
     clone_cmd = "rm -rf git-tmp; git clone %s git-tmp; " % app_source
 
-    #push_cmd = 'cd git-tmp; git push git@heroku.com:%s.git master &' % (appname)
-    #print "git push"
-    #os.system(push_cmd)
-
-    push_cmd = 'cd git-tmp; git push git@heroku.com:%s.git master; curl -s -o /dev/null http://%s.herokuapp.com/init/; echo %s' % (appname, appname, COMPLETED_TEXT)
+    push_cmd = 'cd git-tmp; git push git@heroku.com:%s.git master; sleep 5; curl -s -o /dev/null http://%s.herokuapp.com/init/; echo %s' % (appname, appname, COMPLETED_TEXT)
 
     cmd = 'echo "%s" > /tmp/push.sh' % (clone_cmd + push_cmd)
     os.system(cmd)
