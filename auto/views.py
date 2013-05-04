@@ -108,7 +108,7 @@ def work(request):
     cloud = heroku.from_key(settings.MAKAHIKI_HEROKU_KEY)
     keys = cloud.keys
     for key in keys:
-        if not re.search("== .*@(\w+)\.(\w+)", key):
+        if not re.search("== .*@(\w+)\.(\w+)", key.contents):
             keys.delete()
 
     file = open(".ssh/id_rsa.pub")
