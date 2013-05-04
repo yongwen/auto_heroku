@@ -19,21 +19,22 @@ def home(request):
     apps = cloud.apps
     app_dict = {}
     for app in apps:
-        app_info = app.__dict__
+        if app.name not in ("kukuicup-uh", "kukuicup-ewc", "kukuicup-demo", "makahiki-farm"):
+            app_info = app.__dict__
 
-        today = timezone.now() - datetime.timedelta(minutes=3)
-        complete_status = "complete"
-        if app_info["slug_size"] is None or app_info["slug_size"] == 0:
-            complete_status = "pending"
-        elif app_info["created_at"] >= today:
-            # if newly created, ping the app url to see if it is up
-            r = requests.get('https://%s.herokuapp.com' % app.name)
-            print "%s response code=%d" % (app.name, r.status_code)
-            if 200 != r.status_code:
+            today = timezone.now() - datetime.timedelta(minutes=3)
+            complete_status = "complete"
+            if app_info["slug_size"] is None or app_info["slug_size"] == 0:
                 complete_status = "pending"
+            elif app_info["created_at"] >= today:
+                # if newly created, ping the app url to see if it is up
+                r = requests.get('https://%s.herokuapp.com' % app.name)
+                print "%s response code=%d" % (app.name, r.status_code)
+                if 200 != r.status_code:
+                    complete_status = "pending"
 
-        app_info["completed_status"] = complete_status
-        app_dict[app.name] = app_info
+            app_info["completed_status"] = complete_status
+            app_dict[app.name] = app_info
     keys = sorted(app_dict.keys())
     app_list = []
     for key in keys:

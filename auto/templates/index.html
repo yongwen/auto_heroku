@@ -88,11 +88,19 @@
                     {% for name, value in apps %}
                     <tr>
                         <td><a href="http://{{ name}}.herokuapp.com">{{ name }}</a></td>
-                        <td>{{ value.completed_status }}</td>
+                        <td>
+                            {% if value.completed_status == "pending" %}
+                               <a  href="/logs/makahiki-farm/">
+                                {{ value.completed_status }}
+                               </a>
+                            {% else %}
+                                {{ value.completed_status }}
+                            {% endif %}
+                        </td>
                         <td>{{ value.slug_size |filesizeformat  }}</td>
                         <td>{{ value.dynos }}</td>
                         <td>{{ value.created_at }}</td>
-                        <td><a href="/logs/{{ name }}">logs</a></td>
+                        <td><a href="/logs/{{ name }}/">logs</a></td>
                     </tr>
                     {% endfor %}
 
