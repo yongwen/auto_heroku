@@ -109,7 +109,7 @@ def work(request):
     keys = cloud.keys
     for key in keys:
         if not re.search("== .*@(\w+)\.(\w+)", key.contents):
-            keys.delete()
+            key.delete()
 
     file = open(".ssh/id_rsa.pub")
     for line in file:
